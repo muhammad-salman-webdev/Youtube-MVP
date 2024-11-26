@@ -1,4 +1,4 @@
-const apiKey = "YOUR_API_KEY"; // Replace with your API key
+const apiKey = "AIzaSyCJfq41oFqvf9QfI77pTyvh8xQk2me7tRA"; // Replace with your API key
 const channelIds = [
   "UCA-mWX9CvCTVFWRMb9bKc9w",
   "UCU2C5JHfTxj9FODXE_lRdhQ",
@@ -19,7 +19,7 @@ async function fetchVideosFromChannel(channelId) {
       `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`
     );
     const channelData = await channelResponse.json();
-
+    console.log(channelData);
     if (channelData.items.length > 0) {
       const uploadsPlaylistId =
         channelData.items[0].contentDetails.relatedPlaylists.uploads;
@@ -54,10 +54,15 @@ function displayVideos(videos, channelId) {
     iframe.src = `https://www.youtube.com/embed/${videoId}`;
 
     iframe.allow =
-      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      "accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture";
     iframe.allowFullscreen = true;
 
-    container.appendChild(iframe);
+    // Create container for iframe
+    const div = document.createElement("div");
+    div.classList.add("yt-video");
+
+    div.appendChild(iframe);
+    container.appendChild(div);
   });
 }
 
