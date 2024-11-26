@@ -14,9 +14,9 @@
       body {
         background: linear-gradient(
           90deg,
-          rgba(170, 44, 255, 1) 0%,
-          rgba(234, 40, 40, 1) 50%,
-          rgba(255, 167, 43, 1) 100%
+          hsla(276, 100%, 59%, 0.818) 0%,
+          rgba(234, 40, 40, 0.893) 50%,
+          rgba(255, 167, 43, 0.898) 100%
         );
         min-height: 100vh;
       }
@@ -38,6 +38,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
         gap: 40px;
+        margin-top: 40px;
       }
 
       .yt-video {
@@ -61,6 +62,15 @@
         font-family: system-ui;
         width: 100%;
         max-width: 100%;
+        span {
+          /* font-style: italic; */
+          font-size: 30px;
+          color: #ff9841;
+          color: rgb(17, 255, 0);
+        }
+        i {
+          font-size: 18px;
+        }
       }
       /* 
       .load-more-btn {
@@ -234,7 +244,7 @@
         playlistId
       ) {
         const channelHeader = document.createElement("h2");
-        channelHeader.textContent = `Videos from Channel: ${channelName} - ${channelId}`;
+        channelHeader.innerHTML = `Videos from Channel: <span> ${channelName} </span> - <i> ${channelId} </i>`;
 
         const channelContainer = document.createElement("div");
         channelContainer.classList.add("channel-container");
