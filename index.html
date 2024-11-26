@@ -3,299 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Channels</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
     <link
       rel="shortcut icon"
       href="assets/media/images/favicon.png"
       type="image/x-icon" />
-    <title>YouTube - MVP</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        background: linear-gradient(
-          90deg,
-          hsla(276, 100%, 59%, 0.818) 0%,
-          rgba(234, 40, 40, 0.893) 50%,
-          rgba(255, 167, 43, 0.898) 100%
-        );
-        min-height: 100vh;
-      }
-
-      .container {
-        padding: 10vh 5vw;
-        max-width: 1440px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-      }
-
-      .channel-container {
-        margin-top: 30px;
-      }
-
-      .videos-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-        gap: 40px;
-        margin-top: 40px;
-      }
-
-      .yt-video {
-        border-radius: 10px;
-        overflow: hidden;
-        display: flex;
-        max-width: 600px;
-        min-width: 300px;
-        width: 100%;
-      }
-
-      .yt-video iframe {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border-radius: 10px;
-      }
-
-      h2 {
-        color: white;
-        margin-bottom: 20px;
-        font-family: system-ui;
-        width: 100%;
-        max-width: 100%;
-        span {
-          font-size: 30px;
-          color: rgb(17, 255, 0);
-        }
-        i {
-          font-size: 18px;
-        }
-      }
-      /* 
-      .load-more-btn {
-        background-color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        transition: 0.3s;
-        position: relative;
-      }
-
-      .load-more-btn:disabled {
-        cursor: not-allowed;
-        color: #888;
-      }
-
-      .loading {
-        pointer-events: none;
-        opacity: 0.7;
-      } */
-
-      .load-more-btn {
-        background: linear-gradient(
-          135deg,
-          rgba(170, 44, 255, 1) 0%,
-          rgba(234, 40, 40, 1) 100%
-        ); /* Gradient background */
-        border: none;
-        padding: 12px 24px;
-        border-radius: 30px; /* Round corners */
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        color: white;
-        display: flex;
-        gap: 5px;
-        margin-top: 20px;
-        z-index: 100;
-        transition: all 0.3s ease; /* Smooth transition */
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-      }
-
-      .load-more-btn:hover {
-        background: linear-gradient(
-          135deg,
-          rgba(234, 40, 40, 1) 0%,
-          rgba(170, 44, 255, 1) 100%
-        ); /* Gradient reverse on hover */
-        transform: scale(1.05); /* Slightly scale up on hover */
-      }
-
-      .load-more-btn:focus {
-        outline: none; /* Remove outline when focused */
-        box-shadow: 0 0 0 4px rgba(170, 44, 255, 0.4); /* Focus effect */
-      }
-
-      .load-more-btn:disabled {
-        cursor: not-allowed;
-        background: rgba(170, 44, 255, 0.5); /* Disabled state with opacity */
-        box-shadow: none;
-      }
-
-      .loading {
-        .spinner {
-          animation: spin 1s linear infinite;
-        }
-      }
-
-      .spinner {
-        width: 20px;
-        height: 20px;
-        border: 4px solid transparent;
-        border-top: 4px solid #333;
-        border-radius: 50%;
-        margin-right: 10px;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
   </head>
   <body>
-    <div class="container" id="videoContainer"></div>
+    <div class="main-container">
+      <h1 class="text-center">Select a Channel</h1>
+      <div id="channelsContainer"></div>
+    </div>
+
     <script>
-      const apiKey = "AIzaSyCJfq41oFqvf9QfI77pTyvh8xQk2me7tRA"; // Replace with your API key
-      const channelIds = [
-        "UCPCw5ycqW0fme1BdvNqOxbw", // Project Air
-        "UCA-mWX9CvCTVFWRMb9bKc9w", // Dan Martell
+      const channels = [
+        { id: "UCPCw5ycqW0fme1BdvNqOxbw", name: "Project Air" },
+        { id: "UCA-mWX9CvCTVFWRMb9bKc9w", name: "Dan Martell" },
       ];
-      const maxResults = 6; // Number of videos per fetch
-      const playlistFetchCount = {}; // Keep track of fetched videos for each playlist
 
-      async function fetchVideosForChannels() {
-        for (const channelId of channelIds) {
-          await fetchVideosFromChannel(channelId);
-        }
-      }
+      const container = document.getElementById("channelsContainer");
 
-      async function fetchVideosFromChannel(channelId) {
-        try {
-          const channelDetailsResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&id=${channelId}&key=${apiKey}`
-          );
-          const channelDetailsData = await channelDetailsResponse.json();
-
-          if (channelDetailsData.items && channelDetailsData.items.length > 0) {
-            const channelName = channelDetailsData.items[0].snippet.title;
-            const uploadsPlaylistId =
-              channelDetailsData.items[0].contentDetails.relatedPlaylists
-                .uploads;
-
-            if (!playlistFetchCount[uploadsPlaylistId]) {
-              playlistFetchCount[uploadsPlaylistId] = 0;
-            }
-
-            await loadMoreVideos(uploadsPlaylistId, channelName, channelId);
-          } else {
-            console.error(`Channel not found: ${channelId}`);
-          }
-        } catch (error) {
-          console.error(
-            `Error fetching videos for channel ${channelId}:`,
-            error
-          );
-        }
-      }
-
-      async function loadMoreVideos(playlistId, channelName, channelId) {
-        const container = document.getElementById("videoContainer");
-        const channelContainer = document.querySelector(
-          `#channel-${playlistId}`
-        );
-
-        try {
-          const startIndex = playlistFetchCount[playlistId] * maxResults;
-          const playlistResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=${maxResults}&key=${apiKey}`
-          );
-          const playlistData = await playlistResponse.json();
-
-          if (!channelContainer) {
-            createChannelSection(container, channelName, channelId, playlistId);
-          }
-
-          displayVideos(playlistData.items || [], playlistId);
-          playlistFetchCount[playlistId]++;
-        } catch (error) {
-          console.error("Error loading more videos: ", error);
-        }
-      }
-
-      function createChannelSection(
-        container,
-        channelName,
-        channelId,
-        playlistId
-      ) {
-        const channelHeader = document.createElement("h2");
-        channelHeader.innerHTML = `Videos from Channel: <span> ${channelName} </span> - <i> ${channelId} </i>`;
-
-        const channelContainer = document.createElement("div");
-        channelContainer.classList.add("channel-container");
-        channelContainer.id = `channel-${playlistId}`;
-
-        const videosContainer = document.createElement("div");
-        videosContainer.classList.add("videos-container");
-
-        const loadMoreBtn = document.createElement("button");
-        loadMoreBtn.className = "load-more-btn";
-        loadMoreBtn.textContent = "Load More";
-        loadMoreBtn.onclick = async () => {
-          loadMoreBtn.disabled = true;
-          loadMoreBtn.classList.add("loading");
-          loadMoreBtn.innerHTML = `<div class="spinner"></div> Loading...`;
-          await loadMoreVideos(playlistId, channelName, channelId);
-          loadMoreBtn.disabled = false;
-          loadMoreBtn.classList.remove("loading");
-          loadMoreBtn.innerHTML = `Load More`;
+      channels.forEach((channel) => {
+        const button = document.createElement("button");
+        button.textContent = channel.name;
+        button.classList.add("channel-btn");
+        button.onclick = () => {
+          window.location.href = `channel.html?channelId=${channel.id}`;
         };
-
-        channelContainer.appendChild(channelHeader);
-        channelContainer.appendChild(videosContainer);
-        channelContainer.appendChild(loadMoreBtn);
-        container.appendChild(channelContainer);
-      }
-
-      function displayVideos(videos, playlistId) {
-        const videosContainer = document.querySelector(
-          `#channel-${playlistId} .videos-container`
-        );
-
-        videos.forEach((video) => {
-          const videoId = video.snippet.resourceId.videoId;
-          const iframe = document.createElement("iframe");
-          iframe.src = `https://www.youtube.com/embed/${videoId}`;
-          iframe.allow =
-            "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-          iframe.allowFullscreen = true;
-
-          const div = document.createElement("div");
-          div.classList.add("yt-video");
-          div.appendChild(iframe);
-
-          videosContainer.appendChild(div);
-        });
-      }
-
-      fetchVideosForChannels();
+        container.appendChild(button);
+      });
     </script>
   </body>
 </html>

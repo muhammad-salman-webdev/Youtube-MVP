@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="assets/media/images/favicon.png"
+      type="image/x-icon" />
     <title>YouTube - MVP</title>
     <style>
       * {
@@ -14,9 +18,9 @@
       body {
         background: linear-gradient(
           90deg,
-          rgba(170, 44, 255, 1) 0%,
-          rgba(234, 40, 40, 1) 50%,
-          rgba(255, 167, 43, 1) 100%
+          hsla(276, 100%, 59%, 0.818) 0%,
+          rgba(234, 40, 40, 0.893) 50%,
+          rgba(255, 167, 43, 0.898) 100%
         );
         min-height: 100vh;
       }
@@ -38,6 +42,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
         gap: 40px;
+        margin-top: 40px;
       }
 
       .yt-video {
@@ -52,7 +57,7 @@
       .yt-video iframe {
         width: 100%;
         aspect-ratio: 16 / 9;
-        border-radius: 10px; /* Added border-radius */
+        border-radius: 10px;
       }
 
       h2 {
@@ -61,8 +66,15 @@
         font-family: system-ui;
         width: 100%;
         max-width: 100%;
+        span {
+          font-size: 30px;
+          color: rgb(17, 255, 0);
+        }
+        i {
+          font-size: 18px;
+        }
       }
-
+      /* 
       .load-more-btn {
         background-color: white;
         border: none;
@@ -72,10 +84,12 @@
         font-size: 16px;
         font-weight: bold;
         color: #333;
-        display: inline-block;
-        align-self: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         margin-top: 20px;
         transition: 0.3s;
+        position: relative;
       }
 
       .load-more-btn:disabled {
@@ -84,6 +98,64 @@
       }
 
       .loading {
+        pointer-events: none;
+        opacity: 0.7;
+      } */
+
+      .load-more-btn {
+        background: linear-gradient(
+          135deg,
+          rgba(170, 44, 255, 1) 0%,
+          rgba(234, 40, 40, 1) 100%
+        ); /* Gradient background */
+        border: none;
+        padding: 12px 24px;
+        border-radius: 30px; /* Round corners */
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        display: flex;
+        gap: 5px;
+        margin-top: 20px;
+        z-index: 100;
+        transition: all 0.3s ease; /* Smooth transition */
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+      }
+
+      .load-more-btn:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(234, 40, 40, 1) 0%,
+          rgba(170, 44, 255, 1) 100%
+        ); /* Gradient reverse on hover */
+        transform: scale(1.05); /* Slightly scale up on hover */
+      }
+
+      .load-more-btn:focus {
+        outline: none; /* Remove outline when focused */
+        box-shadow: 0 0 0 4px rgba(170, 44, 255, 0.4); /* Focus effect */
+      }
+
+      .load-more-btn:disabled {
+        cursor: not-allowed;
+        background: rgba(170, 44, 255, 0.5); /* Disabled state with opacity */
+        box-shadow: none;
+      }
+
+      .loading {
+        .spinner {
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 4px solid transparent;
+        border-top: 4px solid #333;
+        border-radius: 50%;
+        margin-right: 10px;
         animation: spin 1s linear infinite;
       }
 
@@ -102,10 +174,8 @@
     <script>
       const apiKey = "AIzaSyCJfq41oFqvf9QfI77pTyvh8xQk2me7tRA"; // Replace with your API key
       const channelIds = [
-        // Project Air
-        "UCPCw5ycqW0fme1BdvNqOxbw",
-        // Dan Martell
-        "UCA-mWX9CvCTVFWRMb9bKc9w",
+        "UCPCw5ycqW0fme1BdvNqOxbw", // Project Air
+        "UCA-mWX9CvCTVFWRMb9bKc9w", // Dan Martell
       ];
       const maxResults = 6; // Number of videos per fetch
       const playlistFetchCount = {}; // Keep track of fetched videos for each playlist
@@ -176,7 +246,7 @@
         playlistId
       ) {
         const channelHeader = document.createElement("h2");
-        channelHeader.textContent = `Videos from Channel: ${channelName} - ${channelId}`;
+        channelHeader.innerHTML = `Videos from Channel: <span> ${channelName} </span> - <i> ${channelId} </i>`;
 
         const channelContainer = document.createElement("div");
         channelContainer.classList.add("channel-container");
@@ -191,11 +261,11 @@
         loadMoreBtn.onclick = async () => {
           loadMoreBtn.disabled = true;
           loadMoreBtn.classList.add("loading");
-          loadMoreBtn.textContent = "Loading...";
+          loadMoreBtn.innerHTML = `<div class="spinner"></div> Loading...`;
           await loadMoreVideos(playlistId, channelName, channelId);
           loadMoreBtn.disabled = false;
           loadMoreBtn.classList.remove("loading");
-          loadMoreBtn.textContent = "Load More";
+          loadMoreBtn.innerHTML = `Load More`;
         };
 
         channelContainer.appendChild(channelHeader);

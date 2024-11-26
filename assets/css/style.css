@@ -1,3 +1,180 @@
+@import url('https://muhammad-salman-webdev.github.io/OriginSoftware.dev/Resources/fontawesome-pro-icons/css/all.min.css');
+
+/* Universal Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styles */
+body {
+    background-color: #ffffff;
+    /* White background */
+    color: #000000;
+    /* Black text color */
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* Container Styles */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+/* Channel and Video Containers */
+.channel-container {
+    margin-top: 30px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#channelsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.videos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+/* Video Styling */
+.yt-video {
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    max-width: 600px;
+    min-width: 300px;
+    width: 100%;
+    border: 2px solid #000000;
+    /* Black border for emphasis */
+}
+
+.yt-video iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+}
+
+/* Heading Styles */
+h1,
+h2 {
+    color: #000000;
+    /* Black headings */
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+h2 span {
+    font-size: 30px;
+    color: #000000;
+}
+
+h2 i {
+    font-size: 18px;
+}
+
+/* Button Styles */
+.channel-btn {
+    background-color: #ffffff;
+    /* White background */
+    color: #000000;
+    /* Black text */
+    border: 2px solid #000000;
+    /* Black border */
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.channel-btn:hover {
+    background-color: #000000;
+    /* Black on hover */
+    color: #ffffff;
+    /* White text on hover */
+    transform: scale(1.1);
+    /* Slight zoom effect */
+}
+
+/* Load More Button Styles */
+.load-more-btn {
+    background-color: #ffffff;
+    /* White background */
+    color: #000000;
+    /* Black text */
+    border: 2px solid #000000;
+    /* Black border */
+    padding: 12px 24px;
+    border-radius: 30px;
+    /* Rounded corners */
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 20px;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.load-more-btn:hover {
+    background-color: #000000;
+    /* Black on hover */
+    color: #ffffff;
+    /* White text on hover */
+    transform: scale(1.05);
+}
+
+.load-more-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.4);
+    /* Focus outline */
+}
+
+.load-more-btn:disabled {
+    cursor: not-allowed;
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Disabled state */
+    color: rgba(0, 0, 0, 0.5);
+    box-shadow: none;
+}
+
+/* Spinner Styles */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 4px solid transparent;
+    border-top: 4px solid #000000;
+    /* Black spinner */
+    border-radius: 50%;
+    margin-right: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,30 +182,132 @@
 }
 
 body {
-    background: rgb(170, 44, 255);
-    background: linear-gradient(90deg, rgba(170, 44, 255, 1) 0%, rgba(234, 40, 40, 1) 50%, rgba(255, 167, 43, 1) 100%);
-    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.main-container {
+    padding: 20px;
+    /* Padding added to the container */
+    max-width: 1200px;
+    /* Optional: Set a maximum width for the content */
+    margin: 0 auto;
+    /* Centers the container */
 }
 
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-    gap: 40px;
-    padding: 10vh 5vw;
-    max-width: 1440px;
-    margin: 0 auto;
+    text-align: center;
+}
 
-    .yt-video {
-        border-radius: 10px;
-        overflow: hidden;
-        display: flex;
-        max-width: 600px;
-        min-width: 300px;
+h1 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.yt-video {
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    max-width: 600px;
+    min-width: 300px;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #f0f0f0 25%, #c6c6c6 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        /* Double the width to create the effect */
+        animation: move-gradient 1.5s linear infinite;
+        /* Animation to move the gradient */
+    }
+}
 
-        iframe {
-            width: 100%;
-            aspect-ratio: 16/9;
-        }
+/* Animation to move the gradient from left to right */
+@keyframes move-gradient {
+    0% {
+        background-position: 200% 0;
+        /* Start position */
+    }
+
+    100% {
+        background-position: -200% 0;
+        /* End position */
+    }
+}
+
+.yt-video iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    position: relative;
+}
+
+.back-home {
+    background-color: #fff;
+    border: 2px solid #000;
+    color: black;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-home:hover {
+    background-color: #000;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Style for the back-to-home button */
+.back-to-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 20px;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.back-to-home:hover {
+    background-color: #0056b3;
+}
+
+.back-to-home:focus {
+    outline: none;
+}
+
+@media (max-width: 576px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .main-container:has(#videoContainer) {
+        margin-top: 60px;
+    }
+
+    .back-to-home {
+        position: absolute;
     }
 }
