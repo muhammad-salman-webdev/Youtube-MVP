@@ -4,33 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YouTube Channels</title>
+
+    <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- Favicon for the website -->
     <link
       rel="shortcut icon"
       href="assets/media/images/favicon.png"
       type="image/x-icon" />
   </head>
   <body>
+    <!-- Main container for the content -->
     <div class="main-container">
+      <!-- Page heading -->
       <h1 class="text-center">Select a Channel</h1>
+
+      <!-- Container for dynamically added channel buttons -->
       <div id="channelsContainer"></div>
     </div>
 
     <script>
+      // Array containing YouTube channel details
       const channels = [
-        { id: "UCPCw5ycqW0fme1BdvNqOxbw", name: "Project Air" },
-        { id: "UCA-mWX9CvCTVFWRMb9bKc9w", name: "Dan Martell" },
+        { id: "UCPCw5ycqW0fme1BdvNqOxbw", name: "Project Air" }, // Project Air channel
+        { id: "UCA-mWX9CvCTVFWRMb9bKc9w", name: "Dan Martell" }, // Dan Martell channel
       ];
 
+      // Get the container element where channel buttons will be added
       const container = document.getElementById("channelsContainer");
 
+      // Iterate over the channels array and create a button for each channel
       channels.forEach((channel) => {
+        // Create a new button element
         const button = document.createElement("button");
+
+        // Set the button text to the channel name
         button.textContent = channel.name;
+
+        // Add a CSS class to the button for styling
         button.classList.add("channel-btn");
+
+        // Attach an onclick event handler to the button
         button.onclick = () => {
+          // Redirect to the channel.html page with the channel ID as a query parameter
           window.location.href = `channel.html?channelId=${channel.id}`;
         };
+
+        // Append the button to the container
         container.appendChild(button);
       });
     </script>

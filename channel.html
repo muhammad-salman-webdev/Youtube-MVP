@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Favicon for the website -->
     <link
       rel="shortcut icon"
       href="assets/media/images/favicon.png"
@@ -23,8 +25,10 @@
   </head>
   <body>
     <div class="main-container">
+      <!-- Main heading for the page -->
       <h1 id="channelTitle">Videos from Channel</h1>
 
+      <!-- Container to display the fetched videos -->
       <div class="container" id="videoContainer"></div>
 
       <!-- Back to home button -->
@@ -32,55 +36,75 @@
         <i class="fa-regular fa-arrow-left"></i>
       </button>
 
-      <!-- Loading spinner -->
+      <!-- Loading spinner to indicate data fetching -->
       <div id="loadingSpinner" class="loading-spinner" style="display: none">
         <i class="fa fa-spinner fa-spin"></i> Loading more videos...
       </div>
     </div>
 
     <script>
-      const videosToShow = 6; // Number of videos to display initially and per scroll
-      const apiKey = "AIzaSyCJfq41oFqvf9QfI77pTyvh8xQk2me7tRA"; // API key
+      // Number of videos to display initially and on each scroll
+      const videosToShow = 6;
+
+      // YouTube API key for authentication
+      const apiKey = "AIzaSyCJfq41oFqvf9QfI77pTyvh8xQk2me7tRA";
+
+      // Parse the channelId from URL query parameters
       const urlParams = new URLSearchParams(window.location.search);
       const channelId = urlParams.get("channelId");
 
-      let nextPageToken = ""; // Track the next page token for pagination
-      let isLoading = false; // Flag to prevent multiple simultaneous fetches
-      let uploadsPlaylistId = ""; // Store the playlist ID for fetching videos
+      // Variables to manage pagination and data fetching
+      let nextPageToken = ""; // Token for fetching the next page of videos
+      let isLoading = false; // Prevents simultaneous API calls
+      let uploadsPlaylistId = ""; // ID of the channel's uploads playlist
 
+      // If no channelId is provided, show an error message
       if (!channelId) {
         document.body.innerHTML = "<h1>Channel not found</h1>";
       } else {
-        fetchChannelDetails(channelId);
+        fetchChannelDetails(channelId); // Fetch channel details and videos
       }
 
+      /**
+       * Fetches details about the channel using the YouTube API.
+       * Updates the page title and fetches the channel's videos.
+       * @param {string} channelId - The ID of the YouTube channel.
+       */
       async function fetchChannelDetails(channelId) {
         try {
           const channelResponse = await fetch(
             `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&id=${channelId}&key=${apiKey}`
           );
           const channelData = await channelResponse.json();
+
+          // Extract the uploads playlist ID and channel name
           uploadsPlaylistId =
             channelData.items[0].contentDetails.relatedPlaylists.uploads;
           const channelName = channelData.items[0].snippet.title;
 
-          // Update the h1 with the channel name
+          // Update the main heading with the channel name
           document.getElementById(
             "channelTitle"
           ).innerText = `Videos from ${channelName}`;
 
-          fetchVideos(uploadsPlaylistId); // Fetch initial set of videos
+          fetchVideos(uploadsPlaylistId); // Fetch initial videos
         } catch (error) {
           console.error("Error fetching channel details:", error);
           document.body.innerHTML = "<h1>Error fetching channel details</h1>";
         }
       }
 
+      /**
+       * Fetches videos from the specified playlist using the YouTube API.
+       * Displays the videos on the page.
+       * @param {string} playlistId - The ID of the playlist to fetch videos from.
+       * @param {string} [pageToken=""] - Token for fetching the next page of videos.
+       */
       async function fetchVideos(playlistId, pageToken = "") {
-        if (isLoading) return; // Prevent multiple requests at the same time
+        if (isLoading) return; // Avoid multiple simultaneous requests
         isLoading = true;
 
-        // Show loading spinner
+        // Show the loading spinner
         document.getElementById("loadingSpinner").style.display = "block";
 
         try {
@@ -89,24 +113,24 @@
           );
           const videosData = await videosResponse.json();
 
-          // If there's a next page, update nextPageToken
-          if (videosData.nextPageToken) {
-            nextPageToken = videosData.nextPageToken;
-          } else {
-            nextPageToken = ""; // No more videos available
-          }
+          // Update the next page token if more videos are available
+          nextPageToken = videosData.nextPageToken || "";
 
-          // Display videos
+          // Render the videos on the page
           displayVideos(videosData.items || []);
         } catch (error) {
           console.error("Error fetching videos:", error);
         } finally {
-          // Hide loading spinner
+          // Hide the loading spinner
           document.getElementById("loadingSpinner").style.display = "none";
-          isLoading = false; // Reset loading flag
+          isLoading = false; // Reset the loading flag
         }
       }
 
+      /**
+       * Displays a list of videos in the container.
+       * @param {Array} videos - Array of video objects from the API.
+       */
       function displayVideos(videos) {
         const container = document.getElementById("videoContainer");
 
@@ -114,11 +138,13 @@
           const videoId = video.snippet.resourceId.videoId;
           const videoTitle = video.snippet.title;
 
+          // Create a container for each video
           const videoDiv = document.createElement("div");
           videoDiv.classList.add("yt-video");
 
+          // Create an iframe to embed the video
           const iframe = document.createElement("iframe");
-          iframe.src = `https://www.youtube.com/embed/${videoId}`;
+          iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
           iframe.allow =
             "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
           iframe.allowFullscreen = true;
@@ -128,20 +154,20 @@
         });
       }
 
-      // Detect when the user scrolls to the bottom
+      // Add scroll event listener to fetch more videos when near the bottom
       window.addEventListener("scroll", function () {
         if (
           window.innerHeight + window.scrollY >=
           document.body.offsetHeight - 100
         ) {
           if (nextPageToken && !isLoading) {
-            fetchVideos(uploadsPlaylistId, nextPageToken); // Fetch more videos
+            fetchVideos(uploadsPlaylistId, nextPageToken);
           }
         }
       });
     </script>
 
-    <!-- Add FontAwesome for the spinner icon (optional) -->
+    <!-- FontAwesome for icons (optional) -->
     <script
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"></script>
